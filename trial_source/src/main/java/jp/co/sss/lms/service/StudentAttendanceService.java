@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -213,14 +214,29 @@ public class StudentAttendanceService {
 	 */
 	public AttendanceForm setAttendanceForm(
 			List<AttendanceManagementDto> attendanceManagementDtoList) {
-
+		//
 		AttendanceForm attendanceForm = new AttendanceForm();
 		attendanceForm.setAttendanceList(new ArrayList<DailyAttendanceForm>());
 		attendanceForm.setLmsUserId(loginUserDto.getLmsUserId());
 		attendanceForm.setUserName(loginUserDto.getUserName());
 		attendanceForm.setLeaveFlg(loginUserDto.getLeaveFlg());
 		attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
-
+		//Task26 時間,分のプルダウン用マップの生成
+		//時間マップの生成
+		LinkedHashMap<Integer, String> hourMap = new LinkedHashMap<>();
+		hourMap.put(null, "");
+		for (int i = 0; i < 23; i++) {
+			hourMap.put(i, String.format("%02d", i));
+		}
+		//分マップの生成
+		LinkedHashMap<Integer, String> minuteMap = new LinkedHashMap<>();
+		minuteMap.put(null, "");
+		for (int i = 0; i < 23; i++) {
+			minuteMap.put(i, String.format("%02d", i));
+		}
+		//勤怠Utilで中抜け時間マップを取得
+		attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
+		//時間マップの取得
 		// 途中退校している場合のみ設定
 		if (loginUserDto.getLeaveDate() != null) {
 			attendanceForm
@@ -230,6 +246,7 @@ public class StudentAttendanceService {
 		}
 
 		// 勤怠管理リストの件数分、日次の勤怠フォームに移し替え
+		//Task26 時刻を時間と分に分割し、表示用の日付文字列を生成してセット
 		for (AttendanceManagementDto attendanceManagementDto : attendanceManagementDtoList) {
 			DailyAttendanceForm dailyAttendanceForm = new DailyAttendanceForm();
 			dailyAttendanceForm
@@ -244,6 +261,11 @@ public class StudentAttendanceService {
 				dailyAttendanceForm.setBlankTimeValue(String.valueOf(
 						attendanceUtil.calcBlankTime(attendanceManagementDto.getBlankTime())));
 			}
+			//Task26
+			
+			
+			
+			
 			dailyAttendanceForm.setStatus(String.valueOf(attendanceManagementDto.getStatus()));
 			dailyAttendanceForm.setNote(attendanceManagementDto.getNote());
 			dailyAttendanceForm.setSectionName(attendanceManagementDto.getSectionName());
@@ -348,7 +370,7 @@ public class StudentAttendanceService {
 		String dateStr = sdf.format(date);
 		Date dateOnly = sdf.parse(dateStr);
 		//未入力件数の取得
-		int count = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(),
+		Integer count = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(),
 				Constants.DB_FLG_FALSE, dateOnly);
 		//未入力件数が0より大きければtrue,そうでなければfalseを返す
 		if (count > 0) {

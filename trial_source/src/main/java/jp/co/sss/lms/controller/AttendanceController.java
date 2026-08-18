@@ -1,8 +1,6 @@
 package jp.co.sss.lms.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,15 +47,7 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 		//Task25 未入力チェック
-		
-		//フォーマットパターンの設定
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		//日付の取得
-		Date date = new Date();
-		String dateStr = sdf.format(date);
-		Date dateOnly = sdf.parse(dateStr);
-		
-		//APIを呼び出し、過去日の未入力数をカウント
+		//APIを呼び出し、結果をスコープに保存
 		model.addAttribute("notEnterFlg",studentAttendanceService.notEnterCheck());
 		
 		return "attendance/detail";

@@ -50,9 +50,9 @@ public class DailyAttendanceForm {
 	/** 開始時 */
 	private Integer trainingStartTimeHour;
 	/** 開始分 */
-	private Integer trainingStartTimeMinutes;
+	private Integer trainingStartTimeMinute;
 	/** 退勤時 */
 	private Integer trainingEndTimeHour;
 	/** 退勤分 */
-	private Integer trainingEndTimeMinutes;
+	private Integer trainingEndTimeMinute;
 }

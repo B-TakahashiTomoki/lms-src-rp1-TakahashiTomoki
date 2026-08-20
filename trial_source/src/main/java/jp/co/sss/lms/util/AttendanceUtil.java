@@ -131,7 +131,63 @@ public class AttendanceUtil {
 		}
 		return map;
 	}
-
+	
+	/**
+	 * 時間のプルダウンマップを生成
+	 * @return 時間のプルダウンマップ
+	 */
+	public LinkedHashMap<Integer, String> getHourMap() {
+		LinkedHashMap<Integer, String> hourMap = new LinkedHashMap<>();
+		hourMap.put(null, "");
+		for (int i = 0; i < 24; i++) {
+			hourMap.put(i, String.format("%02d", i));
+		}
+		return hourMap;
+	}
+	
+	/**
+	 * 分のプルダウンマップを生成
+	 * @return 分のプルダウンマップ
+	 */
+	public LinkedHashMap<Integer, String> getMinuteMap() {
+		LinkedHashMap<Integer, String> minuteMap = new LinkedHashMap<>();
+		minuteMap.put(null, "");
+		for (int i = 0; i < 60; i++) {
+			minuteMap.put(i, String.format("%02d", i));
+		}
+		return minuteMap;
+	}
+	/**
+	 * 
+	 * @param trainingTime
+	 * @return 開始・退勤時間の切り出した時間
+	 */
+	public Integer getHour(String trainingTime) {
+		Integer hour = null;
+		if (trainingTime != null && !trainingTime.isEmpty()) {
+			hour = Integer.parseInt(trainingTime.substring(0, 2));
+		} else {
+			hour = null;
+		} 
+		return hour;
+	}
+	
+	/**
+	 * 
+	 * @param trainingTime
+	 * @return 開始・退勤時間の切り出した分
+	 */
+	public Integer getMinute(String trainingTime) {		
+		Integer minute = null;
+		if (trainingTime != null && !trainingTime.isEmpty()) {
+			minute = Integer.parseInt(trainingTime.substring(3, 5));
+		} else {
+			minute = null;
+		}
+		
+		return minute;
+	}
+	
 	/**
 	 * 研修日の判定
 	 * 

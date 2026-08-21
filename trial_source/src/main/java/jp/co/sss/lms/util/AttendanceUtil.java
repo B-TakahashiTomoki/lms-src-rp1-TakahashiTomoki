@@ -202,5 +202,10 @@ public class AttendanceUtil {
 		}
 		return false;
 	}
+	
+	public TrainingTime calcJukoTime(TrainingTime startTime, TrainingTime endTime) {
+		TrainingTime total = new TrainingTime();
+		return total;
+	}
 
 }

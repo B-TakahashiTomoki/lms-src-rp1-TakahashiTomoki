@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
@@ -388,6 +389,37 @@ public class StudentAttendanceService {
 				String endTimeFormat = String.format("%02d:%02d", dailyAttendanceForm.getTrainingEndTimeHour(),
 						dailyAttendanceForm.getTrainingEndTimeMinute());
 				dailyAttendanceForm.setTrainingEndTime(endTimeFormat);
+			}
+		}
+	}
+	/**
+	 * 
+	 * @param attendanceForm
+	 * @param result
+	 */
+	public void updateInputCheck(AttendanceForm attendanceForm, BindingResult result) {
+		for (DailyAttendanceForm dailyAttendanceForm : attendanceForm.getAttendanceList()) {
+			if (dailyAttendanceForm.getNote().length() >  100) {
+				messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH);
+			}
+			if ((dailyAttendanceForm.getTrainingStartTimeHour() != null &&
+				dailyAttendanceForm.getTrainingStartTimeMinute() == null) ||
+				(dailyAttendanceForm.getTrainingStartTimeHour()== null &&
+				dailyAttendanceForm.getTrainingStartTimeMinute() != null)) {
+				messageUtil.getMessage(Constants.INPUT_INVALID);
+			}
+			if ((dailyAttendanceForm.getTrainingEndTimeHour() != null &&
+					dailyAttendanceForm.getTrainingEndTimeMinute() == null) ||
+					(dailyAttendanceForm.getTrainingEndTimeHour()== null &&
+					dailyAttendanceForm.getTrainingEndTimeMinute() != null)) {
+					messageUtil.getMessage(Constants.INPUT_INVALID);
+				}
+			if (dailyAttendanceForm.getTrainingStartTime() == null &&
+				dailyAttendanceForm.getTrainingEndTime() != null) {
+				messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY);
+			}
+			if (dailyAttendanceForm.getTrainingStartTime().compareTo(dailyAttendanceForm.getTrainingEndTime()) == 1) {
+				messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE);
 			}
 		}
 	}
